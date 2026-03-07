@@ -1,0 +1,1212 @@
+[
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:22:28.454347Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:22:34.941858Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:22:34.941858Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:22:42.322282Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:22:42.322282Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:22:49.267742Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:22:55.758524Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:22:55.758524Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:23:02.069336Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:02.183084Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:02.183084Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:23:08.526082Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:08.769654Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:08.769654Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:23:15.305247Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:15.692876Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:23:22.164335Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:22.430428Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:22.430428Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:23:28.897898Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:29.322739Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:29.322739Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:23:35.714609Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:35.890436Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:23:42.528674Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:42.730722Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:42.730722Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:23:49.183585Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:49.272282Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:49.272282Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:23:55.836039Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:23:56.063073Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:24:02.615325Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:02.783300Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:02.783300Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:24:09.179581Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:09.415918Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:09.415918Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:24:15.812663Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:16.247619Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:24:22.688674Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:23.141646Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:23.141646Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:24:29.720924Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:30.709764Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:30.709764Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:24:37.558026Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:38.161422Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:38.161422Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:24:44.879838Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:45.431859Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:24:51.951382Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:52.474862Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:52.474862Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:24:59.084349Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:59.608559Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 192.168.56.101. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:59.608559Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:24:59.608559Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:25:06.345170Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:06.748656Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 192.168.56.101. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:06.748656Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:06.748656Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:25:13.376109Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:13.957725Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 192.168.56.101. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:13.957725Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:25:20.854207Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:21.174815Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 192.168.56.101. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:21.174815Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:21.174815Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:25:27.933148Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 192.168.56.101. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:28.164052Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:28.164052Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:28.164052Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 192.168.56.101. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:28.164052Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:25:34.977189Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:35.269310Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 192.168.56.101. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:35.269310Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:25:41.710668Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:42.052542Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 192.168.56.101. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:42.052542Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:42.052542Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:25:48.964983Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:49.240205Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 192.168.56.101. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:49.240205Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:25:55.656093Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:55.762780Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:25:55.762780Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:26:02.233793Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:02.314836Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:26:08.661178Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:09.258080Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 192.168.56.101. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:09.258080Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:09.258080Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:26:15.739787Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:15.891223Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:26:22.319872Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:22.459186Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:22.459186Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:26:28.817390Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:29.274568Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:26:35.692331Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:36.126568Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:36.126568Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:26:42.914145Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:43.355806Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:26:49.928351Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:50.229737Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:50.229737Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:26:56.793921Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:26:57.340513Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:27:03.794760Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:27:04.163345Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:27:04.163345Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:27:10.596839Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:27:10.833544Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:27:10.833544Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:27:17.296451Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:27:17.501689Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "suspicious_process",
+        "severity": "HIGH",
+        "message": "Suspicious process detected: nc (PID: 5090) - Cmd: nc -l 1234",
+        "timestamp": "2026-03-07T09:27:23.714315Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:27:23.986632Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    },
+    {
+        "alert_type": "port_scan_detected",
+        "severity": "HIGH",
+        "message": "Port scan detected from 127.0.0.1. Reached 21 unique ports.",
+        "timestamp": "2026-03-07T09:27:23.986632Z",
+        "source": "user_vm",
+        "threat_score": 10,
+        "mitre_technique": "T1046",
+        "mitre_name": "Network Service Scanning"
+    }
+]

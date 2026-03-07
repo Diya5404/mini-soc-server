@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1><span class="highlight">SOC</span> Analytics Dashboard</h1>
+            <div class="status-indicator">
+                <span class="pulse"></span> System Active
+            </div>
+        </header>
+
+        <section class="overview-panels">
+            <div class="panel">
+                <h3>Total Events</h3>
+                <p id="total-events" class="counter">0</p>
+            </div>
+            <div class="panel">
+                <h3>Total Alerts</h3>
+                <p id="total-alerts" class="counter">0</p>
+            </div>
+            <div class="panel alert-panel">
+                <h3>High Severity Alerts</h3>
+                <p id="high-alerts" class="counter">0</p>
+            </div>
+            <div class="panel">
+                <h3>Average Threat Score</h3>
+                <p id="avg-threat" class="counter">0.0</p>
+            </div>
+        </section>
+
+        <section class="charts-section">
+            <div class="chart-container">
+                <canvas id="eventsChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="alertsSeverityChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="topAttackersChart"></canvas>
+            </div>
+        </section>
+
+        <section class="data-tables">
+            <div class="table-container">
+                <h2>Confirmed Incidents <span class="badge" id="incident-count">0</span></h2>
+                <table id="incidents-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Severity</th>
+                            <th>Threat Score</th>
+                            <th>MITRE Technique</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            
+            <div class="table-container">
+                <h2>Recent Alerts</h2>
+                <table id="alerts-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Severity</th>
+                            <th>Source</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="table-container">
+                <h2>Raw Telemetry Stream</h2>
+                <table id="events-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Event Type</th>
+                            <th>Endpoint</th>
+                            <th>Payload</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <script src="/static/dashboard.js"></script>
+</body>
+</html>
