@@ -1,0 +1,22 @@
+# SQLite database (generated at runtime by Render)
+soc.db
+
+# Log files (runtime data)
+logs/*.json
+
+# Gunicorn socket
+gunicorn.ctl
+*.ctl
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+*.egg-info/
+dist/
+build/
+
+# Editor
+.vscode/
+.idea/

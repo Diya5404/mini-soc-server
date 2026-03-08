@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+
+{% block title %}Responses & Actions{% endblock %}
+{% block header %}Active Response Controls{% endblock %}
+
+{% block content %}
+<section class="panels full-width" style="display: flex; gap: 20px;">
+    <div class="panel" style="flex: 1;">
+        <h3>Manual Mitigation Control</h3>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">Queue a response action to be executed by endpoint
+            agents.</p>
+
+        <form id="action-form">
+            <div class="form-group">
+                <label for="agent_id">Target Agent ID</label>
+                <input type="text" id="agent_id" required placeholder="e.g. diya-VirtualBox">
+            </div>
+
+            <div class="form-group">
+                <label for="action_type">Action Type</label>
+                <select id="action_type" required>
+                    <option value="iptables_block">Block IP (iptables)</option>
+                    <option value="kill_process">Kill Process Name</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="target_value">Target Value</label>
+                <input type="text" id="target_value" required placeholder="e.g. 192.168.1.100 or nc">
+            </div>
+
+            <button type="submit" class="btn-primary">Queue Response Action</button>
+            <div id="form-msg" style="margin-top: 10px; font-weight: bold;"></div>
+        </form>
+    </div>
+</section>
+
+<section class="data-tables full-width" style="margin-top: 20px;">
+    <div class="table-container">
+        <h2>Automated & Manual Mitigations <span class="badge" id="response-count"
+                style="background-color: var(--success)">0</span></h2>
+        <table id="responses-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Agent ID</th>
+                    <th>Action Type</th>
+                    <th>Target</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+<script>
+    document.getElementById('action-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button');
+        const msg = document.getElementById('form-msg');
+
+        btn.disabled = true;
+        btn.textContent = "Queueing...";
+
+        const payload = {
+            agent_id: document.getElementById('agent_id').value,
+            action_type: document.getElementById('action_type').value,
+            target_value: document.getElementById('target_value').value
+        };
+
+        try {
+            const response = await fetch('/api/queue_action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                msg.textContent = "Action successfully queued!";
+                msg.style.color = "var(--success)";
+                document.getElementById('target_value').value = "";
+            } else {
+                msg.textContent = `Error: ${data.error}`;
+                msg.style.color = "var(--danger)";
+            }
+        } catch (err) {
+            msg.textContent = "Network error connecting to backend.";
+            msg.style.color = "var(--danger)";
+        }
+
+        btn.disabled = false;
+        btn.textContent = "Queue Response Action";
+
+        setTimeout(() => { msg.textContent = ""; }, 5000);
+    });
+</script>
+{% endblock %}

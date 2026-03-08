@@ -1,71 +1,79 @@
 import sys
 import os
 
-# Add the project root to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from flask import Flask, request, jsonify, render_template
-import json
 from engine.ingestion import process_event
+from engine.response import get_pending_actions, queue_action
+from engine import database
 
 app = Flask(__name__)
 
-# Base path for logs
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOGS_DIR = os.path.join(BASE_DIR, "logs")
+# ─── Event Intake ─────────────────────────────────────────────────────────
 
 @app.route('/event', methods=['POST'])
 def receive_event():
     event_data = request.json
     if not event_data:
         return jsonify({"status": "error", "message": "Invalid JSON"}), 400
-        
+
     success, msg = process_event(event_data)
+
+    agent_id = event_data.get("source", "unknown")
+    actions = get_pending_actions(agent_id)
+
     if success:
-        return jsonify({"status": "success", "message": msg}), 200
+        return jsonify({"status": "success", "message": msg, "actions": actions}), 200
     else:
         return jsonify({"status": "error", "message": msg}), 400
+
+# ─── API Data ─────────────────────────────────────────────────────────────
 
 @app.route('/api/data', methods=['GET'])
 def get_data():
     data = {
-        "events": [],
-        "alerts": [],
-        "incidents": []
+        "events":    database.get_events(),
+        "alerts":    database.get_alerts(),
+        "incidents": database.get_incidents(),
+        "responses": database.get_responses(),
     }
-    
-    try:
-        events_file = os.path.join(LOGS_DIR, "events.json")
-        if os.path.exists(events_file):
-            with open(events_file, 'r') as f:
-                try:
-                    data["events"] = json.load(f)
-                except json.JSONDecodeError:
-                    pass
-                
-        alerts_file = os.path.join(LOGS_DIR, "alerts.json")
-        if os.path.exists(alerts_file):
-            with open(alerts_file, 'r') as f:
-                try:
-                    data["alerts"] = json.load(f)
-                except json.JSONDecodeError:
-                    pass
-                
-        incidents_file = os.path.join(LOGS_DIR, "incidents.json")
-        if os.path.exists(incidents_file):
-            with open(incidents_file, 'r') as f:
-                try:
-                    data["incidents"] = json.load(f)
-                except json.JSONDecodeError:
-                    pass
-    except Exception as e:
-        print(f"Error reading logs: {e}")
-        
     return jsonify(data)
+
+# ─── Manual Action Queue ──────────────────────────────────────────────────
+
+@app.route('/api/queue_action', methods=['POST'])
+def queue_manual_action():
+    data = request.json
+    agent_id    = data.get('agent_id')
+    action_type = data.get('action_type')
+    target      = data.get('target_value')
+
+    if not agent_id or not action_type or not target:
+        return jsonify({"error": "Missing required fields"}), 400
+
+    queue_action(agent_id, action_type, target)
+    return jsonify({"status": "success", "message": "Action queued"}), 200
+
+# ─── Page Routes ──────────────────────────────────────────────────────────
 
 @app.route('/')
 def dashboard():
     return render_template('index.html')
+
+@app.route('/events')
+def events_page():
+    return render_template('events.html')
+
+@app.route('/incidents')
+def incidents_page():
+    return render_template('incidents.html')
+
+@app.route('/actions')
+def actions_page():
+    return render_template('actions.html')
+
+# ─── Entry Point ───────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

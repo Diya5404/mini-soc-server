@@ -37,29 +37,36 @@ function updateDashboard() {
         .then(data => {
             updatePanels(data);
             updateTables(data);
-            updateChartsData(data);
+            if (document.getElementById('eventsChart')) {
+                updateChartsData(data);
+            }
         })
         .catch(error => console.error('Error fetching data:', error));
 }
 
 function updatePanels(data) {
-    animateValue('total-events', data.events.length);
-    animateValue('total-alerts', data.alerts.length);
+    if (document.getElementById('total-events')) animateValue('total-events', data.events.length);
+    if (document.getElementById('total-alerts')) animateValue('total-alerts', data.alerts.length);
 
-    const highAlerts = data.alerts.filter(a => a.severity === 'HIGH').length;
-    animateValue('high-alerts', highAlerts);
+    if (document.getElementById('high-alerts')) {
+        const highAlerts = data.alerts.filter(a => a.severity === 'HIGH').length;
+        animateValue('high-alerts', highAlerts);
+    }
 
-    if (data.alerts.length > 0) {
+    if (document.getElementById('avg-threat') && data.alerts.length > 0) {
         const totalScore = data.alerts.reduce((sum, a) => sum + (a.threat_score || 0), 0);
         document.getElementById('avg-threat').innerText = (totalScore / data.alerts.length).toFixed(1);
     }
 
-    document.getElementById('incident-count').innerText = data.incidents.length;
+    if (document.getElementById('incident-count')) document.getElementById('incident-count').innerText = data.incidents.length;
+    if (document.getElementById('response-count') && data.responses) document.getElementById('response-count').innerText = data.responses.length;
+    if (document.getElementById('event-count')) document.getElementById('event-count').innerText = data.events.length;
+    if (document.getElementById('alert-count')) document.getElementById('alert-count').innerText = data.alerts.length;
 }
 
 function animateValue(id, value) {
     const el = document.getElementById(id);
-    if (parseInt(el.innerText) !== value) {
+    if (el && parseInt(el.innerText) !== value) {
         el.innerText = value;
         el.style.transform = "scale(1.2)";
         setTimeout(() => el.style.transform = "scale(1)", 200);
@@ -83,51 +90,76 @@ function createRow(contentHtml, isNew = false) {
 }
 
 function updateTables(data) {
+    // Responses Table
+    const respBody = document.querySelector('#responses-table tbody');
+    if (data.responses && respBody) {
+        respBody.innerHTML = '';
+        [...data.responses].reverse().slice(0, 10).forEach(resp => {
+            const html = `
+                <td><strong>${formatTime(resp.timestamp)}</strong></td>
+                <td>${resp.agent_id}</td>
+                <td><span class="tag" style="background: rgba(88, 166, 255, 0.15); color: var(--highlight); border: 1px solid rgba(88,166,255,0.3);">${resp.action_type}</span></td>
+                <td><strong>${resp.target}</strong></td>
+                <td><span class="tag ${resp.status === 'success' ? 'severity-low' : 'severity-high'}">${resp.status}</span></td>
+                <td>${resp.details || ''}</td>
+            `;
+            respBody.innerHTML += createRow(html);
+        });
+    }
+
     // Incidents Table
     const incBody = document.querySelector('#incidents-table tbody');
-    incBody.innerHTML = '';
-    [...data.incidents].reverse().slice(0, 10).forEach(inc => {
-        const html = `
-            <td><strong>${formatTime(inc.timestamp)}</strong></td>
-            <td><span class="tag ${getSeverityClass(inc.severity)}">${inc.severity}</span></td>
-            <td><strong>${inc.threat_score}</strong></td>
-            <td><span class="highlight">${inc.mitre_technique || 'N/A'}</span></td>
-            <td>${inc.message || ''}</td>
-        `;
-        incBody.innerHTML += createRow(html);
-    });
+    if (incBody) {
+        incBody.innerHTML = '';
+        [...data.incidents].reverse().slice(0, 10).forEach(inc => {
+            const html = `
+                <td><strong>${formatTime(inc.timestamp)}</strong></td>
+                <td><span class="tag ${getSeverityClass(inc.severity)}">${inc.severity}</span></td>
+                <td><strong>${inc.threat_score}</strong></td>
+                <td><span class="highlight">${inc.mitre_technique || 'N/A'}</span></td>
+                <td>${inc.message || ''}</td>
+            `;
+            incBody.innerHTML += createRow(html);
+        });
+    }
 
     // Alerts Table
     const altBody = document.querySelector('#alerts-table tbody');
-    altBody.innerHTML = '';
-    [...data.alerts].reverse().slice(0, 10).forEach(alt => {
-        const html = `
-            <td>${formatTime(alt.timestamp)}</td>
-            <td><strong>${alt.alert_type}</strong></td>
-            <td><span class="tag ${getSeverityClass(alt.severity)}">${alt.severity}</span></td>
-            <td>${alt.source || 'Unknown'}</td>
-            <td>${alt.message}</td>
-        `;
-        altBody.innerHTML += createRow(html);
-    });
+    if (altBody) {
+        altBody.innerHTML = '';
+        [...data.alerts].reverse().slice(0, 10).forEach(alt => {
+            const html = `
+                <td>${formatTime(alt.timestamp)}</td>
+                <td><strong>${alt.alert_type}</strong></td>
+                <td><span class="tag ${getSeverityClass(alt.severity)}">${alt.severity}</span></td>
+                <td>${alt.source || 'Unknown'}</td>
+                <td>${alt.message}</td>
+            `;
+            altBody.innerHTML += createRow(html);
+        });
+    }
 
     // Events Table
     const evtBody = document.querySelector('#events-table tbody');
-    evtBody.innerHTML = '';
-    [...data.events].reverse().slice(0, 15).forEach(evt => {
-        let msg = typeof evt.message === 'string' ? evt.message : JSON.stringify(evt.message);
-        if (msg.length > 70) msg = msg.substring(0, 70) + '...';
-        const html = `
-            <td>${formatTime(evt.timestamp)}</td>
-            <td>${evt.event_type}</td>
-            <td>${evt.source}</td>
-            <td style="font-family: monospace; font-size: 0.85rem; color: #8b949e;">${msg}</td>
-        `;
-        evtBody.innerHTML += createRow(html);
-    });
+    if (evtBody) {
+        evtBody.innerHTML = '';
+        [...data.events].reverse().slice(0, 15).forEach(evt => {
+            let msg = typeof evt.message === 'string' ? evt.message : JSON.stringify(evt.message);
+            if (msg.length > 70) msg = msg.substring(0, 70) + '...';
+            const html = `
+                <td>${formatTime(evt.timestamp)}</td>
+                <td>${evt.event_type}</td>
+                <td>${evt.source}</td>
+                <td style="font-family: monospace; font-size: 0.85rem; color: #8b949e;">${msg}</td>
+            `;
+            evtBody.innerHTML += createRow(html);
+        });
+    }
 }
 
 function updateChartsData(data) {
+    if (!alertsChart || !eventsChart || !attackersChart) return;
+
     // Alerts Severity Doughnut
     let high = 0, med = 0, low = 0;
     data.alerts.forEach(a => {
@@ -142,7 +174,7 @@ function updateChartsData(data) {
     const eventsByMin = {};
     data.events.forEach(e => {
         if (e.timestamp) {
-            const minStr = e.timestamp.substring(11, 16); // e.g., 14:30
+            const minStr = e.timestamp.substring(11, 16);
             eventsByMin[minStr] = (eventsByMin[minStr] || 0) + 1;
         }
     });
@@ -180,7 +212,9 @@ style.innerHTML = `@keyframes fadeIn { from { opacity: 0; transform: translateY(
 document.head.appendChild(style);
 
 window.onload = () => {
-    initCharts();
+    if (document.getElementById('eventsChart')) {
+        initCharts();
+    }
     updateDashboard();
     setInterval(updateDashboard, 5000);
 };

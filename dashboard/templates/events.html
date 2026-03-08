@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}Events Log{% endblock %}
+{% block header %}Raw Telemetry & Alerts Stream{% endblock %}
+
+{% block content %}
+<section class="data-tables full-width">
+    <div class="table-container">
+        <h2>Recent Alerts <span class="badge" id="alert-count">0</span></h2>
+        <table id="alerts-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Severity</th>
+                    <th>Source</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="table-container">
+        <h2>Raw Telemetry Stream <span class="badge" id="event-count">0</span></h2>
+        <table id="events-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Event Type</th>
+                    <th>Endpoint</th>
+                    <th>Payload</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% endblock %}

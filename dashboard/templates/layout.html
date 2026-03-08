@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC Dashboard | {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h1>SOC System</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Overview</a></li>
+                <li><a href="/events" class="{% if request.path == '/events' %}active{% endif %}">Events log</a></li>
+                <li><a href="/incidents" class="{% if request.path == '/incidents' %}active{% endif %}">Incidents</a>
+                </li>
+                <li><a href="/actions" class="{% if request.path == '/actions' %}active{% endif %}">Manual Actions</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header>
+                <h2>{% block header %}{% endblock %}</h2>
+                <div class="status-indicator">
+                    <span class="pulse"></span>
+                    Live Data
+                </div>
+            </header>
+
+            <!-- Page Specific Content -->
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- Page Specific Scripts -->
+    {% block scripts %}
+    {% endblock %}
+</body>
+
+</html>
