@@ -42,31 +42,52 @@ def check_cooldown(source_ip, alert_type, current_time):
     return True
 
 def detect_port_scan(source_ip, current_time):
-    """Detect port scanning behavior (unique ports in window)."""
+    """Detect tiered port scanning behavior."""
     relevant_conns = [
         conn for conn in connection_history[source_ip]
         if current_time - conn[1] <= PORT_SCAN_WINDOW
     ]
     unique_ports = {conn[0] for conn in relevant_conns}
+    count = len(unique_ports)
     
-    if len(unique_ports) > PORT_SCAN_THRESHOLD:
-        if check_cooldown(source_ip, "port_scan_detected", current_time):
-            last_alert_time[(source_ip, "port_scan_detected")] = current_time
-            return True, f"Possible Nmap scan from {source_ip} contacting {len(unique_ports)} unique ports"
-    return False, ""
+    severity = None
+    if count > 20:
+        severity = "HIGH"
+    elif count > 10:
+        severity = "MEDIUM"
+    elif count >= 5:
+        severity = "LOW"
+        
+    if severity:
+        alert_type = "port_scan_detected"
+        if check_cooldown(source_ip, alert_type, current_time):
+            # Only update cooldown for significant alerts or if none exists
+            last_alert_time[(source_ip, alert_type)] = current_time
+            return True, severity, f"Possible Nmap scan from {source_ip} contacting {count} unique ports"
+            
+    return False, None, ""
 
 def detect_ssh_brute_force(source_ip, current_time):
-    """Detect SSH brute force attempts (frequency on port 22)."""
+    """Detect tiered SSH brute force attempts."""
     ssh_conns = [
         conn for conn in connection_history[source_ip]
         if conn[0] == "22" and current_time - conn[1] <= SSH_BRUTE_FORCE_WINDOW
     ]
+    count = len(ssh_conns)
     
-    if len(ssh_conns) > SSH_BRUTE_FORCE_THRESHOLD:
-        if check_cooldown(source_ip, "ssh_bruteforce_detected", current_time):
-            last_alert_time[(source_ip, "ssh_bruteforce_detected")] = current_time
-            return True, f"Multiple SSH login attempts detected from {source_ip} ({len(ssh_conns)} attempts)"
-    return False, ""
+    severity = None
+    if count > 10:
+        severity = "HIGH"
+    elif count >= 5:
+        severity = "MEDIUM"
+        
+    if severity:
+        alert_type = "ssh_bruteforce_detected"
+        if check_cooldown(source_ip, alert_type, current_time):
+            last_alert_time[(source_ip, alert_type)] = current_time
+            return True, severity, f"Multiple SSH login attempts detected from {source_ip} ({count} attempts)"
+            
+    return False, None, ""
 
 def analyze_connections(source_ip, connections, current_time=None):
     """Main entry point for analyzing a batch of connections from an agent."""
@@ -104,21 +125,21 @@ def analyze_connections(source_ip, connections, current_time=None):
         cleanup_old_entries(peer_ip, current_time)
         
         # Port Scan Check
-        is_scan, scan_msg = detect_port_scan(peer_ip, current_time)
+        is_scan, severity, scan_msg = detect_port_scan(peer_ip, current_time)
         if is_scan:
             alerts.append({
                 "type": "port_scan_detected",
-                "severity": "HIGH",
+                "severity": severity,
                 "message": scan_msg,
                 "attacker_ip": peer_ip
             })
             
         # SSH Brute Force Check
-        is_bf, bf_msg = detect_ssh_brute_force(peer_ip, current_time)
+        is_bf, severity, bf_msg = detect_ssh_brute_force(peer_ip, current_time)
         if is_bf:
             alerts.append({
                 "type": "ssh_bruteforce_detected",
-                "severity": "HIGH",
+                "severity": severity,
                 "message": bf_msg,
                 "attacker_ip": peer_ip
             })

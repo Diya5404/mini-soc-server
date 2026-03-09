@@ -18,5 +18,10 @@ def process_event(event_data):
         print(f"[!] Error saving event: {e}")
         return False, "Error saving event"
 
-    correlate_event(event_data)
+    try:
+        correlate_event(event_data)
+    except Exception as e:
+        print(f"[!] Correlation error: {e}")
+        # We still return True because the event IS saved, only detection failed
+        
     return True, "Event processed successfully"

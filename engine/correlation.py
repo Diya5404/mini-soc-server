@@ -50,15 +50,16 @@ def correlate_event(event_data):
             # --- Behavioral Detection Engine ---
             behavioral_alerts = analyze_connections(source_ip, connections)
             for alert in behavioral_alerts:
+                severity = alert["severity"]
                 generate_alert(
                     alert["type"], 
-                    alert["severity"], 
+                    severity, 
                     alert["message"], 
                     event_data
                 )
                 
-                # Active Response for HIGH severity
-                if alert["severity"] == "HIGH" and "attacker_ip" in alert:
+                # Active Response only for severe threats
+                if severity in ("HIGH", "CRITICAL") and "attacker_ip" in alert:
                     database.queue_action(source_ip, "iptables_block", alert["attacker_ip"])
 
             # --- Other Rules (Lateral, Spike) ---

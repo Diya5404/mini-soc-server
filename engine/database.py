@@ -8,7 +8,7 @@ DB_PATH = os.path.join(BASE_DIR, "soc.db")
 
 
 def get_conn():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=20)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -17,6 +17,10 @@ def init_db():
     """Create all tables if they do not already exist."""
     conn = get_conn()
     c = conn.cursor()
+    
+    # Enable WAL mode for better concurrency
+    c.execute("PRAGMA journal_mode=WAL;")
+    c.execute("PRAGMA synchronous=NORMAL;")
 
     c.execute("""
         CREATE TABLE IF NOT EXISTS events (
