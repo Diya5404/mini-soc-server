@@ -36,19 +36,19 @@ _syn_tracker = collections.defaultdict(list)
 # DNS query tracker { ip: [timestamps] }
 _dns_tracker = collections.defaultdict(list)
 
-# Thresholds
-PORT_SCAN_THRESHOLD       = 15   # unique ports within window
+# Thresholds - tuned for lab/real attacks
+PORT_SCAN_THRESHOLD       = 8    # unique DEST ports from same attacker IP
 PORT_SCAN_WINDOW          = 60   # seconds
-BRUTE_FORCE_THRESHOLD     = 8    # connections to same port within window
+BRUTE_FORCE_THRESHOLD     = 5    # connections to same auth port within window
 BRUTE_FORCE_WINDOW        = 30   # seconds
-BRUTE_FORCE_PORTS         = {"22", "23", "21", "3389", "5900", "445", "3306", "1433"}
-LATERAL_IP_THRESHOLD      = 4    # ≥4 internal IPs touched
-LATERAL_PORT_THRESHOLD    = 3    # ≥3 different ports per destination
-CONN_RATE_SPIKE_FACTOR    = 3.0  # current > 3× recent average
-CONN_RATE_MIN_SAMPLES     = 5    # need at least 5 samples before alerting
-SYN_FLOOD_THRESHOLD       = 30   # SYN_SENT connections from same IP in window
-SYN_FLOOD_WINDOW          = 30   # seconds
-DNS_FLOOD_THRESHOLD       = 50   # DNS queries from same IP in window
+BRUTE_FORCE_PORTS         = {"22", "23", "21", "3389", "5900", "445", "3306", "1433", "25", "110"}
+LATERAL_IP_THRESHOLD      = 3    # ≥3 internal IPs touched
+LATERAL_PORT_THRESHOLD    = 2    # ≥2 different ports per destination
+CONN_RATE_SPIKE_FACTOR    = 2.5  # current > 2.5× recent average
+CONN_RATE_MIN_SAMPLES     = 4    # need at least 4 samples before alerting
+SYN_FLOOD_THRESHOLD       = 15   # SYN_SENT/SYN-RECV from same IP in window
+SYN_FLOOD_WINDOW          = 20   # seconds
+DNS_FLOOD_THRESHOLD       = 30   # DNS queries from same IP in window
 DNS_FLOOD_WINDOW          = 60   # seconds
 INTERNAL_PREFIXES         = ("192.168.", "10.", "172.16.", "172.17.", "172.18.",
                              "172.19.", "172.20.", "172.21.", "172.22.", "172.23.",
@@ -97,6 +97,10 @@ def _rule_cpu_anomaly(event_data):
 
 
 # ─── Rule 3: Port Scan (T1046) ───────────────────────────────────────────
+# BUG FIX: Track LOCAL port (victim's destination) from attacker IP.
+# Kali's nmap opens connections TO many ports on the victim.
+# local = victim's port (22, 80, 443...) — this is what varies.
+# peer  = Kali's ephemeral source port (random, NOT useful for port scan detection).
 
 def _rule_port_scan(connections, event_data):
     now = time.time()
@@ -107,20 +111,27 @@ def _rule_port_scan(connections, event_data):
             del _port_tracker[ip]
 
     for conn in connections:
-        peer_ip, peer_port = _split_addr(conn.get("peer", ""))
-        if not peer_ip or not peer_port or _is_loopback(peer_ip):
+        peer_ip, _   = _split_addr(conn.get("peer", ""))
+        _, local_port = _split_addr(conn.get("local", ""))
+
+        # We care: who is the attacker (peer_ip) and which of OUR ports did they probe (local_port)
+        if not peer_ip or not local_port or _is_loopback(peer_ip):
+            continue
+        # Ignore wildcard / listening socket markers
+        if peer_ip in ("*", "0.0.0.0", "::"):
             continue
 
         if peer_ip not in _port_tracker:
             _port_tracker[peer_ip] = {"ports": set(), "ts": now}
 
-        _port_tracker[peer_ip]["ports"].add(peer_port)
+        _port_tracker[peer_ip]["ports"].add(local_port)
         _port_tracker[peer_ip]["ts"] = now
 
         unique = len(_port_tracker[peer_ip]["ports"])
         if unique >= PORT_SCAN_THRESHOLD:
             msg = (f"Port scan detected from {peer_ip} — "
-                   f"{unique} unique ports probed within {PORT_SCAN_WINDOW}s")
+                   f"{unique} unique ports probed on this host within {PORT_SCAN_WINDOW}s "
+                   f"(ports: {', '.join(sorted(_port_tracker[peer_ip]['ports'])[:10])})")
             generate_alert("port_scan_detected", "HIGH", msg, event_data)
             agent_id = event_data.get("source", "user_vm")
             database.queue_action(agent_id, "iptables_block", peer_ip)
@@ -128,14 +139,20 @@ def _rule_port_scan(connections, event_data):
 
 
 # ─── Rule 4: Brute Force (T1110) ─────────────────────────────────────────
+# Detect: many connections FROM the same attacker IP TO the same auth port on us.
+# local_port = the auth service port on THIS host (22, 3389...)
+# peer_ip    = the attacker
 
 def _rule_brute_force(connections, event_data):
     now = time.time()
 
     for conn in connections:
-        peer_ip, peer_port = _split_addr(conn.get("peer", ""))
-        local_ip, local_port = _split_addr(conn.get("local", ""))
+        peer_ip, _    = _split_addr(conn.get("peer", ""))
+        _, local_port = _split_addr(conn.get("local", ""))
+
         if not peer_ip or not local_port or _is_loopback(peer_ip):
+            continue
+        if peer_ip in ("*", "0.0.0.0", "::"):
             continue
 
         if local_port in BRUTE_FORCE_PORTS:
@@ -147,8 +164,11 @@ def _rule_brute_force(connections, event_data):
             ]
             count = len(_brute_tracker[peer_ip][local_port])
             if count >= BRUTE_FORCE_THRESHOLD:
-                msg = (f"Brute force attempt detected from {peer_ip} on port {local_port} — "
-                       f"{count} connections in {BRUTE_FORCE_WINDOW}s")
+                svc = {"22":"SSH","3389":"RDP","21":"FTP","23":"Telnet",
+                       "445":"SMB","3306":"MySQL","1433":"MSSQL",
+                       "5900":"VNC","25":"SMTP","110":"POP3"}.get(local_port, local_port)
+                msg = (f"Brute force on {svc} (port {local_port}) from {peer_ip} — "
+                       f"{count} attempts in {BRUTE_FORCE_WINDOW}s")
                 generate_alert("brute_force_detected", "HIGH", msg, event_data)
                 agent_id = event_data.get("source", "user_vm")
                 database.queue_action(agent_id, "iptables_block", peer_ip)
@@ -200,27 +220,33 @@ def _rule_connection_rate_spike(connections, event_data):
 
 
 # ─── Rule 7: SYN Flood (T1498) ───────────────────────────────────────────
+# SYN_RECV = victim received SYN but no ACK (attacker flooded us)
+# SYN-SENT = victim is trying to connect (unusual if many to same peer)
 
 def _rule_syn_flood(connections, event_data):
     now = time.time()
-    syn_counts = collections.Counter()
 
     for conn in connections:
-        if conn.get("state", "").upper() in ("SYN-SENT", "SYN_SENT"):
-            peer_ip, _ = _split_addr(conn.get("peer", ""))
-            if peer_ip and not _is_loopback(peer_ip):
-                _syn_tracker[peer_ip].append(now)
-                _syn_tracker[peer_ip] = [
-                    t for t in _syn_tracker[peer_ip] if now - t <= SYN_FLOOD_WINDOW
-                ]
-                count = len(_syn_tracker[peer_ip])
-                if count >= SYN_FLOOD_THRESHOLD:
-                    msg = (f"SYN flood detected from {peer_ip} — "
-                           f"{count} SYN connections in {SYN_FLOOD_WINDOW}s")
-                    generate_alert("syn_flood_detected", "HIGH", msg, event_data)
-                    agent_id = event_data.get("source", "user_vm")
-                    database.queue_action(agent_id, "iptables_block", peer_ip)
-                    _syn_tracker[peer_ip].clear()
+        state   = conn.get("state", "").upper().replace("-", "_")
+        if state not in ("SYN_RECV", "SYN_SENT"):
+            continue
+
+        peer_ip, _ = _split_addr(conn.get("peer", ""))
+        if not peer_ip or _is_loopback(peer_ip) or peer_ip in ("*", "0.0.0.0"):
+            continue
+
+        _syn_tracker[peer_ip].append(now)
+        _syn_tracker[peer_ip] = [
+            t for t in _syn_tracker[peer_ip] if now - t <= SYN_FLOOD_WINDOW
+        ]
+        count = len(_syn_tracker[peer_ip])
+        if count >= SYN_FLOOD_THRESHOLD:
+            msg = (f"SYN flood detected from {peer_ip} — "
+                   f"{count} half-open connections in {SYN_FLOOD_WINDOW}s")
+            generate_alert("syn_flood_detected", "HIGH", msg, event_data)
+            agent_id = event_data.get("source", "user_vm")
+            database.queue_action(agent_id, "iptables_block", peer_ip)
+            _syn_tracker[peer_ip].clear()
 
 
 # ─── Rule 8: DNS Flood / Tunneling (T1071.004) ───────────────────────────

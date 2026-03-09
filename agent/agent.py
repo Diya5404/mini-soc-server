@@ -102,17 +102,37 @@ def monitor_processes():
 
 
 def monitor_network():
+    """
+    Collect all TCP connections using psutil (primary) or ss -tan (fallback).
+    psutil captures SYN_RECV states from nmap SYN scans that ss may miss.
+    """
+    connections = []
     try:
-        result = subprocess.run(["ss", "-tan"], capture_output=True, text=True)
-        lines  = result.stdout.strip().split("\n")[1:]
-        connections = []
-        for line in lines:
-            parts = line.split()
-            if len(parts) >= 5:
-                connections.append({"state": parts[0], "local": parts[3], "peer": parts[4]})
-        send_event("network_connections", "INFO", json.dumps(connections))
-    except Exception as e:
-        print(f"[!] Network monitor error: {e}")
+        for c in psutil.net_connections(kind="tcp"):
+            laddr = f"{c.laddr.ip}:{c.laddr.port}" if c.laddr else ""
+            raddr = f"{c.raddr.ip}:{c.raddr.port}" if c.raddr else ""
+            connections.append({
+                "state": c.status or "UNKNOWN",
+                "local": laddr,
+                "peer":  raddr,
+            })
+    except Exception:
+        # Fallback to ss -tan
+        try:
+            result = subprocess.run(["ss", "-tan"], capture_output=True, text=True)
+            lines  = result.stdout.strip().split("\n")[1:]
+            for line in lines:
+                parts = line.split()
+                if len(parts) >= 5:
+                    connections.append({
+                        "state": parts[0],
+                        "local": parts[3],
+                        "peer":  parts[4],
+                    })
+        except Exception as e:
+            print(f"[!] Network monitor error: {e}")
+
+    send_event("network_connections", "INFO", json.dumps(connections))
 
 
 def monitor_cpu():
