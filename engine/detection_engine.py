@@ -42,7 +42,7 @@ def check_cooldown(source_ip, alert_type, current_time):
     return True
 
 def detect_port_scan(source_ip, current_time):
-    """Detect tiered port scanning behavior."""
+    """Detect port scanning behavior (HIGH severity)."""
     relevant_conns = [
         conn for conn in connection_history[source_ip]
         if current_time - conn[1] <= PORT_SCAN_WINDOW
@@ -50,42 +50,31 @@ def detect_port_scan(source_ip, current_time):
     unique_ports = {conn[0] for conn in relevant_conns}
     count = len(unique_ports)
     
-    severity = None
-    if count > 20:
-        severity = "HIGH"
-    elif count > 10:
-        severity = "MEDIUM"
-    elif count >= 5:
-        severity = "LOW"
-        
-    if severity:
+    # User requested port scans be HIGH severity. 
+    # Trigger at 5+ ports to catch early scans.
+    if count >= 5:
         alert_type = "port_scan_detected"
         if check_cooldown(source_ip, alert_type, current_time):
-            # Only update cooldown for significant alerts or if none exists
             last_alert_time[(source_ip, alert_type)] = current_time
-            return True, severity, f"Possible Nmap scan from {source_ip} contacting {count} unique ports"
+            return True, "HIGH", f"HIGH SEVERITY: Port scan detected from {source_ip} ({count} unique ports)"
             
     return False, None, ""
 
 def detect_ssh_brute_force(source_ip, current_time):
-    """Detect tiered SSH brute force attempts."""
+    """Detect SSH brute force attempts (HIGH severity)."""
     ssh_conns = [
         conn for conn in connection_history[source_ip]
         if conn[0] == "22" and current_time - conn[1] <= SSH_BRUTE_FORCE_WINDOW
     ]
     count = len(ssh_conns)
     
-    severity = None
-    if count > 10:
-        severity = "HIGH"
-    elif count >= 5:
-        severity = "MEDIUM"
-        
-    if severity:
+    # User requested brute force be HIGH severity.
+    # Trigger at 5+ attempts.
+    if count >= 5:
         alert_type = "ssh_bruteforce_detected"
         if check_cooldown(source_ip, alert_type, current_time):
             last_alert_time[(source_ip, alert_type)] = current_time
-            return True, severity, f"Multiple SSH login attempts detected from {source_ip} ({count} attempts)"
+            return True, "HIGH", f"HIGH SEVERITY: SSH brute force attempts from {source_ip} ({count} attempts)"
             
     return False, None, ""
 
