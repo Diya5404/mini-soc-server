@@ -2,8 +2,8 @@ import time
 from collections import defaultdict
 
 # Configuration
-PORT_SCAN_WINDOW = 10  # seconds
-PORT_SCAN_THRESHOLD = 20  # unique ports
+PORT_SCAN_WINDOW = 30  # seconds (was 10)
+PORT_SCAN_THRESHOLD = 10  # unique ports (was 20)
 SSH_BRUTE_FORCE_WINDOW = 15  # seconds
 SSH_BRUTE_FORCE_THRESHOLD = 10  # attempts
 ALERT_COOLDOWN = 30  # seconds
