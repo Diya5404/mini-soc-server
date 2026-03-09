@@ -1,9 +1,3 @@
-"""
-Advanced correlation engine with multi-rule detection.
-Detects: port scans, brute force, lateral movement, connection rate spikes,
-         SYN floods, DDoS combo, suspicious processes, DNS anomalies, CPU spikes.
-"""
-
 import os
 import sys
 import json
@@ -15,14 +9,9 @@ from engine.mitre_mapping import map_mitre
 from engine.threat_score import calculate_threat_score
 from engine.incidents import handle_alert
 from engine import database
+from engine.detection_engine import analyze_connections
 
-# ─── In-memory state (cleared on restart, fine for SOC lab) ──────────────
-
-# Port scan tracker  { ip: {"ports": set(), "ts": float} }
-_port_tracker = {}
-
-# Brute force tracker { ip: { port: [timestamps] } }
-_brute_tracker = collections.defaultdict(lambda: collections.defaultdict(list))
+# ─── In-memory state ──────────────────────────────────────────────────────
 
 # Lateral movement tracker { source_ip: { dest_ip: set(ports) } }
 _lateral_tracker = collections.defaultdict(lambda: collections.defaultdict(set))
@@ -30,26 +19,12 @@ _lateral_tracker = collections.defaultdict(lambda: collections.defaultdict(set))
 # Connection rate tracker  [recent total connection counts with timestamps]
 _conn_rate_history = collections.deque(maxlen=30)  # last 30 samples
 
-# SYN flood tracker { ip: [timestamps] }
-_syn_tracker = collections.defaultdict(list)
-
-# DNS query tracker { ip: [timestamps] }
-_dns_tracker = collections.defaultdict(list)
-
-# Thresholds - tuned for lab/real attacks
-PORT_SCAN_THRESHOLD       = 8    # unique DEST ports from same attacker IP
-PORT_SCAN_WINDOW          = 60   # seconds
-BRUTE_FORCE_THRESHOLD     = 5    # connections to same auth port within window
-BRUTE_FORCE_WINDOW        = 30   # seconds
-BRUTE_FORCE_PORTS         = {"22", "23", "21", "3389", "5900", "445", "3306", "1433", "25", "110"}
+# Thresholds
 LATERAL_IP_THRESHOLD      = 3    # ≥3 internal IPs touched
 LATERAL_PORT_THRESHOLD    = 2    # ≥2 different ports per destination
 CONN_RATE_SPIKE_FACTOR    = 2.5  # current > 2.5× recent average
 CONN_RATE_MIN_SAMPLES     = 4    # need at least 4 samples before alerting
-SYN_FLOOD_THRESHOLD       = 15   # SYN_SENT/SYN-RECV from same IP in window
-SYN_FLOOD_WINDOW          = 20   # seconds
-DNS_FLOOD_THRESHOLD       = 30   # DNS queries from same IP in window
-DNS_FLOOD_WINDOW          = 60   # seconds
+
 INTERNAL_PREFIXES         = ("192.168.", "10.", "172.16.", "172.17.", "172.18.",
                              "172.19.", "172.20.", "172.21.", "172.22.", "172.23.",
                              "172.24.", "172.25.", "172.26.", "172.27.", "172.28.",
@@ -60,6 +35,7 @@ INTERNAL_PREFIXES         = ("192.168.", "10.", "172.16.", "172.17.", "172.18.",
 
 def correlate_event(event_data):
     event_type = event_data.get("event_type")
+    source_ip = event_data.get("source", "unknown")
 
     if event_type == "suspicious_process":
         _rule_suspicious_process(event_data)
@@ -70,12 +46,25 @@ def correlate_event(event_data):
     elif event_type == "network_connections":
         try:
             connections = json.loads(event_data["message"])
-            _rule_port_scan(connections, event_data)
-            _rule_brute_force(connections, event_data)
+            
+            # --- Behavioral Detection Engine ---
+            behavioral_alerts = analyze_connections(source_ip, connections)
+            for alert in behavioral_alerts:
+                generate_alert(
+                    alert["type"], 
+                    alert["severity"], 
+                    alert["message"], 
+                    event_data
+                )
+                
+                # Active Response for HIGH severity
+                if alert["severity"] == "HIGH" and "attacker_ip" in alert:
+                    database.queue_action(source_ip, "iptables_block", alert["attacker_ip"])
+
+            # --- Other Rules (Lateral, Spike) ---
             _rule_lateral_movement(connections, event_data)
             _rule_connection_rate_spike(connections, event_data)
-            _rule_syn_flood(connections, event_data)
-            _rule_dns_flood(connections, event_data)
+            
         except (json.JSONDecodeError, TypeError):
             pass
 
@@ -96,86 +85,7 @@ def _rule_cpu_anomaly(event_data):
         generate_alert("system_anomaly", "MEDIUM", msg, event_data)
 
 
-# ─── Rule 3: Port Scan (T1046) ───────────────────────────────────────────
-# BUG FIX: Track LOCAL port (victim's destination) from attacker IP.
-# Kali's nmap opens connections TO many ports on the victim.
-# local = victim's port (22, 80, 443...) — this is what varies.
-# peer  = Kali's ephemeral source port (random, NOT useful for port scan detection).
-
-def _rule_port_scan(connections, event_data):
-    now = time.time()
-
-    # Clean stale
-    for ip in list(_port_tracker.keys()):
-        if now - _port_tracker[ip]["ts"] > PORT_SCAN_WINDOW:
-            del _port_tracker[ip]
-
-    for conn in connections:
-        peer_ip, _   = _split_addr(conn.get("peer", ""))
-        _, local_port = _split_addr(conn.get("local", ""))
-
-        # We care: who is the attacker (peer_ip) and which of OUR ports did they probe (local_port)
-        if not peer_ip or not local_port or _is_loopback(peer_ip):
-            continue
-        # Ignore wildcard / listening socket markers
-        if peer_ip in ("*", "0.0.0.0", "::"):
-            continue
-
-        if peer_ip not in _port_tracker:
-            _port_tracker[peer_ip] = {"ports": set(), "ts": now}
-
-        _port_tracker[peer_ip]["ports"].add(local_port)
-        _port_tracker[peer_ip]["ts"] = now
-
-        unique = len(_port_tracker[peer_ip]["ports"])
-        if unique >= PORT_SCAN_THRESHOLD:
-            msg = (f"Port scan detected from {peer_ip} — "
-                   f"{unique} unique ports probed on this host within {PORT_SCAN_WINDOW}s "
-                   f"(ports: {', '.join(sorted(_port_tracker[peer_ip]['ports'])[:10])})")
-            generate_alert("port_scan_detected", "HIGH", msg, event_data)
-            agent_id = event_data.get("source", "user_vm")
-            database.queue_action(agent_id, "iptables_block", peer_ip)
-            _port_tracker[peer_ip]["ports"].clear()
-
-
-# ─── Rule 4: Brute Force (T1110) ─────────────────────────────────────────
-# Detect: many connections FROM the same attacker IP TO the same auth port on us.
-# local_port = the auth service port on THIS host (22, 3389...)
-# peer_ip    = the attacker
-
-def _rule_brute_force(connections, event_data):
-    now = time.time()
-
-    for conn in connections:
-        peer_ip, _    = _split_addr(conn.get("peer", ""))
-        _, local_port = _split_addr(conn.get("local", ""))
-
-        if not peer_ip or not local_port or _is_loopback(peer_ip):
-            continue
-        if peer_ip in ("*", "0.0.0.0", "::"):
-            continue
-
-        if local_port in BRUTE_FORCE_PORTS:
-            _brute_tracker[peer_ip][local_port].append(now)
-            # Prune old
-            _brute_tracker[peer_ip][local_port] = [
-                t for t in _brute_tracker[peer_ip][local_port]
-                if now - t <= BRUTE_FORCE_WINDOW
-            ]
-            count = len(_brute_tracker[peer_ip][local_port])
-            if count >= BRUTE_FORCE_THRESHOLD:
-                svc = {"22":"SSH","3389":"RDP","21":"FTP","23":"Telnet",
-                       "445":"SMB","3306":"MySQL","1433":"MSSQL",
-                       "5900":"VNC","25":"SMTP","110":"POP3"}.get(local_port, local_port)
-                msg = (f"Brute force on {svc} (port {local_port}) from {peer_ip} — "
-                       f"{count} attempts in {BRUTE_FORCE_WINDOW}s")
-                generate_alert("brute_force_detected", "HIGH", msg, event_data)
-                agent_id = event_data.get("source", "user_vm")
-                database.queue_action(agent_id, "iptables_block", peer_ip)
-                _brute_tracker[peer_ip][local_port].clear()
-
-
-# ─── Rule 5: Lateral Movement (T1021) ────────────────────────────────────
+# ─── Rule 3: Lateral Movement (T1021) ────────────────────────────────────
 
 def _rule_lateral_movement(connections, event_data):
     now = time.time()
@@ -199,7 +109,7 @@ def _rule_lateral_movement(connections, event_data):
         _lateral_tracker[source].clear()
 
 
-# ─── Rule 6: Connection Rate Spike (T1499 / T1595) ───────────────────────
+# ─── Rule 4: Connection Rate Spike (T1499 / T1595) ───────────────────────
 
 def _rule_connection_rate_spike(connections, event_data):
     now = time.time()
@@ -217,56 +127,6 @@ def _rule_connection_rate_spike(connections, event_data):
         msg = (f"Connection rate spike — current: {current} connections, "
                f"avg: {avg:.1f} ({CONN_RATE_SPIKE_FACTOR}× threshold exceeded)")
         generate_alert("connection_rate_spike", "MEDIUM", msg, event_data)
-
-
-# ─── Rule 7: SYN Flood (T1498) ───────────────────────────────────────────
-# SYN_RECV = victim received SYN but no ACK (attacker flooded us)
-# SYN-SENT = victim is trying to connect (unusual if many to same peer)
-
-def _rule_syn_flood(connections, event_data):
-    now = time.time()
-
-    for conn in connections:
-        state   = conn.get("state", "").upper().replace("-", "_")
-        if state not in ("SYN_RECV", "SYN_SENT"):
-            continue
-
-        peer_ip, _ = _split_addr(conn.get("peer", ""))
-        if not peer_ip or _is_loopback(peer_ip) or peer_ip in ("*", "0.0.0.0"):
-            continue
-
-        _syn_tracker[peer_ip].append(now)
-        _syn_tracker[peer_ip] = [
-            t for t in _syn_tracker[peer_ip] if now - t <= SYN_FLOOD_WINDOW
-        ]
-        count = len(_syn_tracker[peer_ip])
-        if count >= SYN_FLOOD_THRESHOLD:
-            msg = (f"SYN flood detected from {peer_ip} — "
-                   f"{count} half-open connections in {SYN_FLOOD_WINDOW}s")
-            generate_alert("syn_flood_detected", "HIGH", msg, event_data)
-            agent_id = event_data.get("source", "user_vm")
-            database.queue_action(agent_id, "iptables_block", peer_ip)
-            _syn_tracker[peer_ip].clear()
-
-
-# ─── Rule 8: DNS Flood / Tunneling (T1071.004) ───────────────────────────
-
-def _rule_dns_flood(connections, event_data):
-    now = time.time()
-
-    for conn in connections:
-        peer_ip, peer_port = _split_addr(conn.get("peer", ""))
-        if peer_port == "53" and peer_ip and not _is_loopback(peer_ip):
-            _dns_tracker[peer_ip].append(now)
-            _dns_tracker[peer_ip] = [
-                t for t in _dns_tracker[peer_ip] if now - t <= DNS_FLOOD_WINDOW
-            ]
-            count = len(_dns_tracker[peer_ip])
-            if count >= DNS_FLOOD_THRESHOLD:
-                msg = (f"DNS flood / tunneling suspected from {peer_ip} — "
-                       f"{count} DNS queries in {DNS_FLOOD_WINDOW}s")
-                generate_alert("dns_anomaly_detected", "MEDIUM", msg, event_data)
-                _dns_tracker[peer_ip].clear()
 
 
 # ─── Alert Generator ─────────────────────────────────────────────────────

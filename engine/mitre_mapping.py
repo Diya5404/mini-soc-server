@@ -14,6 +14,10 @@ MITRE_MAP = {
         "technique": "T1110",
         "name": "Brute Force"
     },
+    "ssh_bruteforce_detected": {
+        "technique": "T1110",
+        "name": "Brute Force"
+    },
     # Lateral movement
     "lateral_movement_detected": {
         "technique": "T1021",
