@@ -24,10 +24,14 @@ def is_filtered(source_ip, peer_ip, peer_port, state):
     if state == "ESTABLISHED":
         return True
         
-    # Prevent Self-Blocking: Ignore OUTBOUND connections (where the agent is sending)
-    # to common service ports that the SOC server or regular web traffic might use.
-    # The agent's telemetry is SYN_SENT to port 5000.
-    if state == "SYN_SENT" and peer_port in ("80", "443", "5000", "5432", "6379"):
+    # Prevent Self-Blocking: Ignore OUTBOUND connections (where the agent is sending).
+    # If the victim VM initiated the connection, the peer_port is usually a well-known
+    # service port (80, 443, etc.) and our local_port is a random high ephemeral port.
+    if peer_port in ("80", "443", "5000", "5432", "6379"):
+        return True
+        
+    # Ignore explicit outbound connection attempts
+    if state == "SYN_SENT":
         return True
         
     return False
