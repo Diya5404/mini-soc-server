@@ -14,6 +14,9 @@ connection_history = defaultdict(list)
 # last_alert_time[(source_ip, alert_type)] = timestamp
 last_alert_time = {}
 
+# Global counter to trigger memory garbage collection
+_cleanup_counter = 0
+
 def is_filtered(source_ip, peer_ip, peer_port, state):
     """Filter out normal/noise traffic."""
     # Ignore localhost
@@ -143,5 +146,27 @@ def analyze_connections(source_ip, connections, current_time=None):
                 "message": bf_msg,
                 "attacker_ip": peer_ip
             })
+            
+    # --- Memory Leak Fix ---
+    # Periodically clean up ALL IPs to prevent OOM crashes from stale bot traffic 
+    # that scanned once and never returned (so they never hit the affected_ips list).
+    if not hasattr(analyze_connections, "cleanup_counter"):
+        analyze_connections.cleanup_counter = 0
+    analyze_connections.cleanup_counter += 1
+    
+    if analyze_connections.cleanup_counter % 20 == 0:
+        stale_ips = []
+        max_window = max(PORT_SCAN_WINDOW, SSH_BRUTE_FORCE_WINDOW)
+        for ip in list(connection_history.keys()):
+            # Run cleanup
+            connection_history[ip] = [
+                conn for conn in connection_history[ip]
+                if current_time - conn[1] <= max_window
+            ]
+            # If IP has no recent connections, mark for deletion
+            if not connection_history[ip]:
+                stale_ips.append(ip)
+        for ip in stale_ips:
+            connection_history.pop(ip, None)
             
     return alerts
