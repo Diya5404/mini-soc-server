@@ -14,15 +14,22 @@ connection_history = defaultdict(list)
 # last_alert_time[(source_ip, alert_type)] = timestamp
 last_alert_time = {}
 
-def is_filtered(source_ip, peer_ip, state):
+def is_filtered(source_ip, peer_ip, peer_port, state):
     """Filter out normal/noise traffic."""
     # Ignore localhost
     if source_ip == "127.0.0.1" or peer_ip == "127.0.0.1":
         return True
+    
     # Ignore established/long-lived connections for scan detection
-    # (Focus on new/attempted connections like SYN_SENT/SYN_RECV)
     if state == "ESTABLISHED":
         return True
+        
+    # Prevent Self-Blocking: Ignore OUTBOUND connections (where the agent is sending)
+    # to common service ports that the SOC server or regular web traffic might use.
+    # The agent's telemetry is SYN_SENT to port 5000.
+    if state == "SYN_SENT" and peer_port in ("80", "443", "5000", "5432", "6379"):
+        return True
+        
     return False
 
 def cleanup_old_entries(source_ip, current_time):
@@ -101,7 +108,7 @@ def analyze_connections(source_ip, connections, current_time=None):
         except ValueError:
             continue
 
-        if is_filtered(source_ip, peer_ip, state):
+        if is_filtered(source_ip, peer_ip, peer_port, state):
             continue
             
         # Add to history: Track which port on the victim was contacted by the peer

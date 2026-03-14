@@ -27,6 +27,9 @@ INTERVAL       = 6  # seconds between polling loops
 
 SUSPICIOUS_PROCS = {"nmap", "hydra", "sqlmap", "masscan", "nikto", "john", "netcat", "nc"}
 
+# Ports that the VM doesn't legitimately use, but attackers often scan
+HONEYPOT_PORTS = [21, 23, 1433, 3306, 8080]
+
 # ─── Helpers ──────────────────────────────────────────────────────────────
 
 def now_utc():
@@ -142,6 +145,70 @@ def monitor_cpu():
     else:
         send_event("system_anomaly", "INFO", f"CPU normal: {cpu:.1f}%")
 
+# ─── Honeypots ────────────────────────────────────────────────────────────
+
+def honeypot_listener(port):
+    """Listens on a fake port. Any connection is a guaranteed scan/probe."""
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind(('0.0.0.0', port))
+        s.listen(5)
+        while True:
+            conn, addr = s.accept()
+            peer_ip = addr[0]
+            conn.close()
+            print(f"[!] HONEYPOT TRIPPED on port {port} by {peer_ip}")
+            send_event("port_scan_detected", "HIGH", 
+                       f"HIGH SEVERITY: Honeypot tripped on port {port} by {peer_ip}")
+            # Rate limit the specific honeypot log to avoid flooding from a single scan
+            time.sleep(2)
+    except Exception as e:
+        print(f"[-] Could not start honeypot on port {port}: {e}")
+
+def monitor_auth_log():
+    """Tails /var/log/auth.log to immediately catch failed SSH logins."""
+    log_file = "/var/log/auth.log"
+    if not os.path.exists(log_file) or not os.access(log_file, os.R_OK):
+        print(f"[-] Cannot read {log_file} - SSH monitoring disabled.")
+        return
+
+    try:
+        with open(log_file, "r") as f:
+            f.seek(0, os.SEEK_END)
+            while True:
+                line = f.readline()
+                if not line:
+                    time.sleep(0.5)
+                    continue
+                if "sshd" in line and "Failed password" in line:
+                    # Extract IP address. Format typically: "Failed password for root from 192.168.1.5 port ..."
+                    parts = line.split()
+                    try:
+                        ip_index = parts.index("from") + 1
+                        attacker_ip = parts[ip_index]
+                        print(f"[!] SSH Brute Force attempt detected from {attacker_ip}")
+                        send_event("ssh_bruteforce_detected", "HIGH",
+                                   f"HIGH SEVERITY: Failed SSH login from {attacker_ip}")
+                    except ValueError:
+                        pass
+    except Exception as e:
+        print(f"[-] Error parsing auth.log: {e}")
+
+def start_background_monitors():
+    import threading
+    
+    # Honeypots
+    for port in HONEYPOT_PORTS:
+        t = threading.Thread(target=honeypot_listener, args=(port,), daemon=True)
+        t.start()
+        print(f"[*] Started Honeypot listener on port {port}")
+        
+    # SSH Logger
+    t_ssh = threading.Thread(target=monitor_auth_log, daemon=True)
+    t_ssh.start()
+    print(f"[*] Started SSH Auth Logger")
+
 # ─── Main Loop ─────────────────────────────────────────────────────────────
 
 def main():
@@ -149,6 +216,8 @@ def main():
     print(f"[*] Agent ID  : {AGENT_ID}")
     print(f"[*] SOC Server: {SOC_SERVER_URL}")
     print(f"[*] Interval  : {INTERVAL}s\n")
+    
+    start_background_monitors()
 
     while True:
         try:
