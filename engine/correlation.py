@@ -43,6 +43,21 @@ def correlate_event(event_data):
     elif event_type == "system_anomaly":
         _rule_cpu_anomaly(event_data)
 
+    elif event_type in ("port_scan_detected", "ssh_bruteforce_detected"):
+        severity = event_data.get("severity", "HIGH")
+        msg = event_data.get("message", "")
+        generate_alert(event_type, severity, msg, event_data)
+        
+        # Extract Attacker IP to queue a block response
+        attacker_ip = None
+        if "by " in msg:
+            attacker_ip = msg.split("by ")[-1].strip()
+        elif "from " in msg:
+            attacker_ip = msg.split("from ")[-1].strip()
+            
+        if attacker_ip and severity in ("HIGH", "CRITICAL"):
+            database.queue_action(source_ip, "iptables_block", attacker_ip)
+
     elif event_type == "network_connections":
         try:
             connections = json.loads(event_data["message"])
