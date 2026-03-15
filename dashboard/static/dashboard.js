@@ -128,10 +128,11 @@ function updateTables(data) {
     if (altBody) {
         altBody.innerHTML = '';
         [...data.alerts].reverse().slice(0, 10).forEach(alt => {
+            const sevClass = getSeverityClass(alt.severity) || 'severity-low';
             const html = `
                 <td>${formatTime(alt.timestamp)}</td>
                 <td><strong>${alt.alert_type}</strong></td>
-                <td><span class="tag ${getSeverityClass(alt.severity)}">${alt.severity}</span></td>
+                <td><span class="tag ${sevClass}">${alt.severity || 'UNKNOWN'}</span></td>
                 <td>${alt.source || 'Unknown'}</td>
                 <td>${alt.message}</td>
             `;

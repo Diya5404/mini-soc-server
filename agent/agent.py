@@ -160,7 +160,7 @@ def honeypot_listener(port):
             conn.close()
             print(f"[!] HONEYPOT TRIPPED on port {port} by {peer_ip}")
             send_event("port_scan_detected", "HIGH", 
-                       f"HIGH SEVERITY: Honeypot tripped on port {port} by {peer_ip}")
+                       f"HIGH SEVERITY: Honeypot tripped on port {port} from {peer_ip}")
             # Rate limit the specific honeypot log to avoid flooding from a single scan
             time.sleep(2)
     except Exception as e:
